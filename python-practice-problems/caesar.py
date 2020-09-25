@@ -19,12 +19,51 @@
     whitespace and punctuation.
 """
 import unittest
+import string
 
 
 def caesar(plain_text, shift_num=1):
-    # TODO: Your code goes here!
-    result = plain_text
+    shifted_text = ''
+
+    for char in plain_text:
+        if char not in string.ascii_lowercase:
+            shifted_char = char
+        else:
+            shifted_ord = ord(char) + shift_num
+            if shifted_ord > 122:
+                shifted_char = chr(shifted_ord - 26)
+            elif shifted_ord < 97:
+                shifted_char = chr(shifted_ord + 26)
+            else:
+                shifted_char = chr(shifted_ord)
+        shifted_text += shifted_char    
+
+    result = shifted_text
+
     return result
+
+
+# def caesar(plain_text, shift_num=1):
+#     letters = string.ascii_lowercase
+#     new_letters = letters[shift_num:] + letters[:shift_num]
+#     mapping = str.maketrans(letters, new_letters)
+#     result = plain_text.translate(mapping)
+#     return result
+
+
+# def caesar(plain_text, shift_num=1):
+#     result = ''
+#     letters = string.ascii_lowercase
+#     for char in plain_text:
+#         if char in letters:
+#             try:
+#                 result += letters[letters.index(char)+shift_num]
+#             except IndexError:
+#                 result += letters[letters.index(char)+shift_num-len(letters)]
+#         else:
+#             result += char
+#     return result
+
 
 
 class CaesarTestCase(unittest.TestCase):

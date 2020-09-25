@@ -11,8 +11,7 @@ import unittest
 def add_it_up(n):
     if isinstance(n, int):
         return sum(range(n+1))
-    else:
-        return 0
+    return 0
 
 
 class IntegerSumTestCase(unittest.TestCase):

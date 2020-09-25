@@ -9,7 +9,7 @@ import unittest
 
 
 def add_it_up(n):
-    if isinstance(n, int) and n >= 0:
+    if isinstance(n, int):
         return sum(range(n+1))
     else:
         return 0

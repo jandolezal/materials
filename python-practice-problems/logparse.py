@@ -15,19 +15,24 @@ import sys
 from datetime import datetime
 
 
-if __name__ == '__main__':
-    log_file = sys.argv[1]
+def print_report(run_time, error_time_stamps):
+    print(f'The device was running for {run_time} seconds')
 
+    print('Timestamps of error events:')
+    for err in error_time_stamps:
+        print(err)
+
+    print('There are no unit tests for logparse.')
+
+
+def parse_logs(log_file):
     error_time_stamps = []
-
-    is_running = False
     run_time = 0
+    is_running = False
 
     with open(log_file) as f:
         for line in f:
-            # Work only with lines which contain 'Device State'
             if 'Device State' in line:
-                # Capture timestamp
                 time_format = '%b %d %H:%M:%S:%f'
                 time_stamp = datetime.strptime(line[:19], time_format)
                 if 'ERR' in line:
@@ -38,15 +43,14 @@ if __name__ == '__main__':
                     is_running = True
                 elif is_running and 'OFF' in line:
                     end = time_stamp
-                    difference = (end - start).seconds
+                    difference = (end - start).total_seconds()
                     run_time += difference
-                    start, end = (0, 0)
                     is_running = False
 
-    print(f'The device was running for {run_time} seconds')
+    return run_time, error_time_stamps
 
-    print('Timestamps of error events:')
-    for err in error_time_stamps:
-        print(err)
 
-    print('There are no unit tests for logparse.')
+if __name__ == '__main__':
+    log_file = sys.argv[1]
+    run_time, error_time_stamps = parse_logs(log_file)
+    print_report(run_time, error_time_stamps)

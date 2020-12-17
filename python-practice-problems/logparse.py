@@ -15,11 +15,11 @@ import sys
 from datetime import datetime
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     log_file = sys.argv[1]
-    
+
     error_time_stamps = []
-    
+
     is_running = False
     run_time = 0
 
@@ -27,10 +27,12 @@ if __name__ == "__main__":
         for line in f:
             # Work only with lines which contain 'Device State'
             if 'Device State' in line:
-                # Capture timestamp
-                time_stamp = datetime.strptime(line[:19], '%b %d %H:%M:%S:%f')
+                # Capture timestamp
+                time_format = '%b %d %H:%M:%S:%f'
+                time_stamp = datetime.strptime(line[:19], time_format)
                 if 'ERR' in line:
-                    error_time_stamps.append(datetime.strftime(time_stamp, '%b %d %H:%M:%S:%f'))
+                    string_stamp = datetime.strftime(time_stamp, time_format)
+                    error_time_stamps.append(string_stamp)
                 elif not is_running and 'ON' in line:
                     start = time_stamp
                     is_running = True
@@ -47,4 +49,4 @@ if __name__ == "__main__":
     for err in error_time_stamps:
         print(err)
 
-    print("There are no unit tests for logparse.")
+    print('There are no unit tests for logparse.')

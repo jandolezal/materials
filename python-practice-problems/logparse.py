@@ -11,7 +11,40 @@
     how long the device was ON, and the time stamp of any ERR conditions.
 """
 
+import sys
+from datetime import datetime
+
 
 if __name__ == "__main__":
-    # TODO: Your code goes here
+    log_file = sys.argv[1]
+    
+    error_time_stamps = []
+    
+    is_running = False
+    run_time = 0
+
+    with open(log_file) as f:
+        for line in f:
+            # Work only with lines which contain 'Device State'
+            if 'Device State' in line:
+                # Capture timestamp
+                time_stamp = datetime.strptime(line[:19], '%b %d %H:%M:%S:%f')
+                if 'ERR' in line:
+                    error_time_stamps.append(datetime.strftime(time_stamp, '%b %d %H:%M:%S:%f'))
+                elif not is_running and 'ON' in line:
+                    start = time_stamp
+                    is_running = True
+                elif is_running and 'OFF' in line:
+                    end = time_stamp
+                    difference = (end - start).seconds
+                    run_time += difference
+                    start, end = (0, 0)
+                    is_running = False
+
+    print(f'The device was running for {run_time} seconds')
+
+    print('Timestamps of error events:')
+    for err in error_time_stamps:
+        print(err)
+
     print("There are no unit tests for logparse.")
